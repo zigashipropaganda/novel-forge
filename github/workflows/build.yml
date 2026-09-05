@@ -1,1 +1,31 @@
+name: Build APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+      - name: Scaffold project if needed
+        run: |
+          if [ ! -f pubspec.yaml ]; then
+            flutter create --org com.zig.novelforge .
+            git config user.name 'github-actions'
+            git config user.email 'actions@github.com'
+            git add .
+            git commit -m 'Scaffold Flutter project'
+            git push
+          fi
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: novel-forge-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
