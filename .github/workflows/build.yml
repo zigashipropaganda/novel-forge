@@ -16,7 +16,7 @@ jobs:
       - name: Scaffold project if needed
         run: |
           if [ ! -f pubspec.yaml ]; then
-            flutter create --org com.zig.novelforge .
+            flutter create --org com.zig.novelforge --project-name novel_forge .
             git config user.name 'github-actions'
             git config user.email 'actions@github.com'
             git add .
